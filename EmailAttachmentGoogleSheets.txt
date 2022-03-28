@@ -1,0 +1,25 @@
+//This is designed to be inputted into app script with google sheets
+
+function sendEmail() {
+
+//fill in with the file you want to attach e.g. ABC.pdf
+var filename= '';
+
+//will grab the file from your GoogleDrive
+var file = DriveApp.getFilesByName(filename).next();
+
+//Sheet1 A column (from 2 onwards) should contain a list of email addresses w 1st cell being a header
+//Sheet2 A2 and B2 should contain a Email subject and Email body
+//These will then be automatically sent
+var ss = SpreadsheetApp.getActiveSpreadsheet()
+var sheet1=ss.getSheetByName('Sheet1');
+var sheet2=ss.getSheetByName('Sheet2');
+var subject = sheet2.getRange(2,1).getValue();;
+var message = sheet2.getRange(2,2).getValue();
+var n=sheet1.getLastRow();
+for (var i = 2; i < n+1 ; i++ ) {
+var emailAddress = sheet1.getRange(i,1).getValue();
+MailApp.sendEmail(emailAddress, subject, message, {attachments: file});
+}
+
+}
